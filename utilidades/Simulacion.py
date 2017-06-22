@@ -24,6 +24,8 @@ class  Simulacion():
         self.n = 0
         #Inicializar cola
         self.cola = Queue()
+        #Numero de iteraciones
+        self.iteraciones = 20
 
     def llegada(self):
         print("Ha ocurrido una llegada")
@@ -54,31 +56,43 @@ class  Simulacion():
 
 
     def simular(self):
-        self.evento = False
-        self.indice = self.vector.encontrarMinimo()
-        temporal = self.vector.getValue(self.indice)
-        if self.masterClock == self.vector.getValue(self.indice):
-            self.evento = True
-            if self.vector.getValue(self.vector.longitud() -1) == self.vector.getValue(self.indice):
-                self.salida()
-            else:
-                self.llegada()
 
-        if self.evento:
-            while self.vector.includes(temporal):
-                if self.vector.indexOf(temporal) == self.vector.longitud()-1:
+        self.encabezado()
+        while self.masterClock <= self.iteraciones:
+            self.evento = False
+            self.indice = self.vector.encontrarMinimo()
+            temporal = self.vector.getValue(self.indice)
+            #print("Indice: " + str(self.indice) + " temporal: " + str(temporal) + " \n")
+            if self.masterClock == self.vector.getValue(self.indice):
+                self.evento = True
+                if self.vector.getValue(self.vector.longitud() -1) == self.vector.getValue(self.indice):
                     self.salida()
                 else:
                     self.llegada()
 
-        #TODO Imprimir estado de las variables
-        self.masterClock += 1
+            if self.evento:
+                while self.vector.includes(temporal):
+                    if self.vector.indexOf(temporal) == self.vector.longitud()-1:
+                        self.salida()
+                    else:
+                        self.llegada()
+
+            self.imprimirIteracion()
+            self.masterClock += 1
 
     def imprimirIteracion(self):
+
         estado = "=======================================================================================\n"
-        estado += "Master Clock: " + str(self.masterClock) + " Mecanico: " + str(self.mecanico)
+        estado += "Master Clock: " + str(self.masterClock) + " Mecanico: " + str(self.mecanico) +"\n"
         estado += "=======================================================================================\n"
         print(estado)
         self.vector.imprimir()
 
-
+    def encabezado(self):
+        linea = "------------------------------------------------------------------------------------\n"
+        linea += "                            UNIVERSIDAD DE EL SALVADOR\n"
+        linea += "-----------------------------------------------------------------------------------\n"
+        linea += "Chacón Sánchez, Salvador de Jesús: CS08004\n"
+        linea += "Morales Álfaro, Daniel Enrique:    MA10016\n"
+        linea += "Rivera Martínez, Kevin Edgardo:    RM11014\n"
+        print(linea)

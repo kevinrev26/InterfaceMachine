@@ -8,6 +8,5 @@ from utilidades import Simulacion
 
 
 if __name__ == '__main__':
-    simular = Simulacion.Simulacion()
-    simular.salida()
-    simular.llegada()
+    modelo = Simulacion.Simulacion()
+    modelo.simular()

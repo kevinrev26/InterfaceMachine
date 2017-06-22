@@ -3,7 +3,6 @@
 # Autor: Kevin Rivera
 # Descripción:
 
-import math
 
 class Arreglo():
 
@@ -17,11 +16,12 @@ class Arreglo():
         indice = 0
         aux = 9000
         for e in self.maquinas:
-            if not math.isnan(e):
+            if  isinstance(e,int):
                 if e <= aux:
-                    index = index +1
+                    aux = e
+                    indice = self.maquinas.index(e)
 
-        return index
+        return indice
 
     def getValue(self,index):
         return self.maquinas[index]
