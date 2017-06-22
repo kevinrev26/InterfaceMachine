@@ -1,9 +1,30 @@
 #!/usr/bin/env python
-# Título: Arreglo
+# Título: 
 # Autor: Kevin Rivera
-# Descripción: Clase para heredar los metodos de Array y escribir un nuevo metodo
-#              para encontrar los valores minimos de un arreglo.
+# Descripción:
+
+import math
 
 class Arreglo():
-    def holaMundo(self):
-        print("Hola de nuevo")
+
+
+    def __init__(self, *datos):
+        self.maquinas = list(datos)
+
+
+    def encontrarMinimo(self):
+        #print("iterando: ", type(self.maquinas))
+        indice = 0
+        aux = 9000
+        for e in self.maquinas:
+            if not math.isnan(e):
+                if e <= aux:
+                    index = index +1
+
+        return index
+
+    def getValue(self,index):
+        return self.maquinas[index]
+
+    def setValue(self,index, value):
+        self.maquinas[index] = value
