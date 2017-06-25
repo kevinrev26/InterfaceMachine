@@ -8,5 +8,10 @@ from utilidades import Simulacion
 
 
 if __name__ == '__main__':
-    modelo = Simulacion.Simulacion()
-    modelo.simular()
+
+    try:
+        iteraciones = int(input("Ingrese el numero de iteraciones: "))
+        modelo = Simulacion.Simulacion(iteraciones)
+        modelo.simular()
+    except ValueError:
+        print("No ha ingresado un numero, ejecute de nuevo")

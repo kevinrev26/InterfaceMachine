@@ -4,11 +4,12 @@
 # Descripción:
 from .Arreglo import Arreglo
 from queue import Queue
+import random
 
 class  Simulacion():
 
 
-    def __init__(self):
+    def __init__(self,iteraciones):
         '''Inicializando los datos de la simulacion'''
         print("Inicializando...")
         self.masterClock = 0
@@ -16,8 +17,14 @@ class  Simulacion():
         self.mecanico = 0
         # Lleva el control de ocurrencia de un evento
         self.evento = False
-        # Las primeras tres posiciones son las maquinas, la ultima el reloj de salida
-        self.vector = Arreglo(1, 4, 9, 8000)
+        # Las primeras 6 posiciones son las maquinas, la ultima el reloj de salida
+        self.vector = Arreglo(int(random.uniform(0,iteraciones)),
+                              int(random.uniform(0,iteraciones)),
+                              int(random.uniform(0,iteraciones)),
+                              int(random.uniform(0,iteraciones)),
+                              int(random.uniform(0,iteraciones)),
+                              int(random.uniform(0,iteraciones)),
+                              iteraciones+1)
         # Indice de de la posicion con el menor valor
         self.indice = 0
         # Numero de clientes en cola
@@ -25,40 +32,46 @@ class  Simulacion():
         #Inicializar cola
         self.cola = Queue()
         #Numero de iteraciones
-        self.iteraciones = 20
+        self.iteraciones = iteraciones
 
     def llegada(self):
         print("Ha ocurrido una llegada")
-        self.masterClock = self.vector.getValue(self.indice)
+        self.masterClock = self.vector.getValue(self.vector.encontrarMinimo())
+
 
         if self.n == 0:
             self.mecanico = 1
-            self.vector.setValue(self.vector.longitud()-1,self.masterClock +5)
+            self.vector.setValue(self.vector.longitud() - 1, int(random.uniform(self.masterClock,
+                                                                                self.iteraciones)))
             self.n=1
-            self.vector.setValue(self.indice,'REPARACION')
+            self.vector.setValue(self.vector.encontrarMinimo(),'R')
         else:
             self.n += 1
-            self.cola.put(self.indice)
-            self.vector.setValue(self.indice,'EN ESPERA')
+            self.cola.put(self.vector.encontrarMinimo())
+            self.vector.setValue(self.vector.encontrarMinimo(),'E')
 
 
     def salida(self):
         print("Ha ocurrido una salida")
         self.masterClock = self.vector.getValue(self.vector.longitud()-1)
-        self.vector.setValue(self.vector.devolverIndiceElemento('REPARACION'),self.masterClock +10)
+        self.vector.setValue(self.vector.devolverIndiceElemento('R'),
+                             int(random.uniform(self.masterClock,self.iteraciones)))
         self.n -= 1
         if self.n == 0:
             self.mecanico = 0
+
         else:
-            self.vector.setValue(self.cola.get(),'REPARACION')
-            self.vector.setValue(self.vector.longitud()-1,self.masterClock + 5)
+            self.vector.setValue(self.cola.get(),'R')
 
-
+        self.vector.setValue(self.vector.longitud() - 1,
+                             int(random.uniform(self.masterClock+1,self.iteraciones)))
 
     def simular(self):
 
         self.encabezado()
-        while self.masterClock <= self.iteraciones:
+        print("Condiciones iniciales: ")
+        self.vector.imprimir()
+        while self.masterClock < self.iteraciones:
             self.evento = False
             self.indice = self.vector.encontrarMinimo()
             temporal = self.vector.getValue(self.indice)
@@ -71,11 +84,13 @@ class  Simulacion():
                     self.llegada()
 
             if self.evento:
-                while self.vector.includes(temporal):
+                while self.vector.includes(temporal) and self.masterClock < self.iteraciones:
                     if self.vector.indexOf(temporal) == self.vector.longitud()-1:
                         self.salida()
                     else:
                         self.llegada()
+
+
 
             self.imprimirIteracion()
             self.masterClock += 1
